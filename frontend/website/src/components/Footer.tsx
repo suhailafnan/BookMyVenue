@@ -1,9 +1,19 @@
+import styles from "./Footer.module.css";
+
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+} from "react-icons/fa";
+
+import { FaXTwitter } from "react-icons/fa6";
+
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 border-t mt-10">
-      <div className="max-w-7xl mx-auto px-6 py-10">
+    <footer className={styles.footerWrapper}>
+      <div className={styles.footerCard}>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className={styles.topSection}>
 
           <div>
             <h3 className="font-semibold mb-3">Support</h3>
@@ -37,17 +47,34 @@ export default function Footer() {
 
         </div>
 
-        <hr className="my-6" />
+        <div className={styles.bottomSection}>
 
-        <div className="flex justify-between items-center text-sm text-gray-600">
-          <p>© 2026 BookMyVenue. All rights reserved.</p>
+          <div className={styles.brand}>
+            <div className={styles.logo}></div>
 
-          <div className="flex gap-4">
-            <a href="#">Facebook</a>
-            <a href="#">Instagram</a>
-            <a href="#">X</a>
-            <a href="#">LinkedIn</a>
+            <span>
+              © 2026 BookMyVenue
+            </span>
           </div>
+
+          <div className={styles.socials}>
+            <a href="#">
+              <FaFacebookF />
+            </a>
+
+            <a href="#">
+              <FaInstagram />
+            </a>
+
+            <a href="#">
+              <FaXTwitter />
+            </a>
+
+            <a href="#">
+              <FaLinkedinIn />
+            </a>
+          </div>
+
         </div>
 
       </div>
