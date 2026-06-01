@@ -1,46 +1,43 @@
 .footerWrapper {
-  padding: 40px 20px;
+  padding: 50px 20px;
 }
 
 .footerCard {
-  max-width: 1200px;
+  max-width: 1400px;
+
   margin: 0 auto;
 
-  background: rgba(255, 255, 255, 0.08);
+  padding: 50px;
 
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  border-radius: 32px;
 
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.55);
 
-  border-radius: 28px;
+  backdrop-filter: blur(30px);
 
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  -webkit-backdrop-filter: blur(30px);
 
-  padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.08),
+    0 0 0 1px rgba(255,255,255,0.2);
 }
+
 .topSection {
   display: grid;
+
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+
+  gap: 80px;
 }
-@media (max-width: 768px) {
 
-  .topSection {
-    grid-template-columns: 1fr;
-  }
-
-  .footerCard {
-    padding: 24px;
-  }
-
-}
 .bottomSection {
-  margin-top: 32px;
+  margin-top: 50px;
 
-  padding-top: 24px;
+  padding-top: 30px;
 
-  border-top: 1px solid rgba(255,255,255,0.12);
+  border-top: 1px solid rgba(0,0,0,0.08);
 
   display: flex;
 
@@ -54,35 +51,71 @@
 
   align-items: center;
 
-  gap: 12px;
+  gap: 14px;
 }
 
 .logo {
-  width: 40px;
+  width: 52px;
 
-  height: 40px;
+  height: 52px;
 
   border-radius: 50%;
 
-  background: linear-gradient(
-    135deg,
-    #6366f1,
-    #8b5cf6
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #8b5cf6
+    );
+
+  box-shadow:
+    0 10px 25px rgba(99,102,241,.35);
 }
 
 .socials {
   display: flex;
 
-  gap: 16px;
+  gap: 18px;
 }
 
 .socials a {
-  font-size: 1.25rem;
+  font-size: 24px;
+
+  color: #222;
 
   transition: all 0.3s ease;
 }
 
 .socials a:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+}
+body {
+  background:
+    linear-gradient(
+      135deg,
+      #f8fafc,
+      #eef2ff,
+      #f3f4f6
+    );
+
+  min-height: 100vh;
+}
+.topSection li {
+  transition: all 0.3s ease;
+
+  cursor: pointer;
+}
+
+.topSection li:hover {
+  transform: translateX(6px);
+
+  color: #111827;
+}
+
+.socials a {
+  transition: all 0.3s ease;
+}
+
+.socials a:hover {
+  transform: translateY(-5px) scale(1.15);
 }
