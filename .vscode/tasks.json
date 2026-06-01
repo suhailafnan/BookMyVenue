@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "dev: website",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "dev"],
+			"options": {
+				"cwd": "frontend/website"
+			},
+			"isBackground": true,
+			"group": "build"
+		}
+	]
+}
