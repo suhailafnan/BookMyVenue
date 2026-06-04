@@ -5,26 +5,24 @@ import VenuePricing from "@/features/venues/components/VenuePricing";
 import VenueLocation from "@/features/venues/components/VenueLocation";
 
 type VenueDetailsPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
-export default function VenueDetailsPage({
+export default async function VenueDetailsPage({
   params,
 }: VenueDetailsPageProps) {
+  const { id } = await params;
+
   return (
     <main>
-      <p>Venue ID: {params.id}</p>
+      <p>Venue ID: {id}</p>
 
       <VenueGallery />
-
       <VenueDetails />
-
       <VenueAmenities />
-
       <VenuePricing />
-
       <VenueLocation />
     </main>
   );

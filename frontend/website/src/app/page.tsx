@@ -20,10 +20,16 @@ export default function Home() {
       />
 
       <SectionTitle title="Popular Venues" />
-      <VenueGrid search={search} />
+      <VenueGrid
+  search={search}
+  location=""
+/>
 
       <SectionTitle title="Featured Venues" />
-      <VenueGrid search={search} />
+      <VenueGrid
+  search={search}
+  location=""
+/>
     </main>
   );
 }

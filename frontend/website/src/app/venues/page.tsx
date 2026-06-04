@@ -8,6 +8,7 @@ import VenueGrid from "@/features/venues/components/VenueGrid";
 
 export default function VenuesPage() {
   const [search, setSearch] = useState("");
+  const [location, setLocation] = useState("");
 
   return (
     <main>
@@ -18,9 +19,15 @@ export default function VenuesPage() {
         setSearch={setSearch}
       />
 
-      <VenueFilters />
+      <VenueFilters
+  location={location}
+  setLocation={setLocation}
+       />
 
-      <VenueGrid search={search} />
+      <VenueGrid
+  search={search}
+  location={location}
+/>
     </main>
   );
 }
