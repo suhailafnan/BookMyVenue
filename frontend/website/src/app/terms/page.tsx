@@ -1,7 +1,7 @@
-export default function AboutPage() {
+export default function TermsPage() {
   return (
     <div>
-      <h1>About Page</h1>
+      <h1>Terms & Conditions</h1>
     </div>
   );
 }
