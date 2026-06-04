@@ -9,6 +9,10 @@ export default function VenueDetails() {
       </p>
 
       <p>Capacity: 500 People</p>
+
+      <button className="mt-4 px-4 py-2 bg-rust text-white rounded">
+         Book Now
+      </button>
     </section>
   );
 }
