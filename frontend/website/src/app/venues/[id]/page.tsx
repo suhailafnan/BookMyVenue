@@ -1,7 +1,17 @@
-export default function VenueDetailsPage() {
+type VenueDetailsPageProps = {
+  params: {
+    id: string;
+  };
+};
+
+export default function VenueDetailsPage({
+  params,
+}: VenueDetailsPageProps) {
   return (
-    <div>
-      <h1>Venue Details Page</h1>
-    </div>
+    <main>
+      <h1>Venue Details</h1>
+
+      <p>Venue ID: {params.id}</p>
+    </main>
   );
 }
