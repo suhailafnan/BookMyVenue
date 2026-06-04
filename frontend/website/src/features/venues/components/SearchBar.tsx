@@ -8,13 +8,14 @@ export default function SearchBar({
   setSearch,
 }: SearchBarProps) {
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search venues..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-    </div>
-  );
+  <div className="p-6">
+    <input
+      type="text"
+      placeholder="Search venues..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      className="w-full border rounded-lg p-3"
+    />
+  </div>
+);
 }

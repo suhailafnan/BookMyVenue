@@ -10,10 +10,16 @@ export default function VenueCard({
   price,
 }: VenueCardProps) {
   return (
-    <div>
-      <h3>{name}</h3>
-      <p>{location}</p>
-      <p>{price}</p>
-    </div>
-  );
+  <div className="border rounded-xl p-4 shadow-md">
+    <h3 className="text-xl font-bold">
+      {name}
+    </h3>
+
+    <p>{location}</p>
+
+    <p className="text-green-600 font-semibold">
+      {price}
+    </p>
+  </div>
+);
 }

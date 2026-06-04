@@ -30,7 +30,7 @@ export default function VenueGrid({
   );
 
   return (
-    <div>
+    <div className="grid md:grid-cols-3 gap-6 p-6">
       {filteredVenues.map((venue, index) => (
         <VenueCard
           key={index}
