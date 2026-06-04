@@ -1,5 +1,9 @@
 import VenueCard from "./VenueCard";
 
+type VenueGridProps = {
+  search: string;
+};
+
 const venues = [
   {
     name: "Royal Hall",
@@ -18,10 +22,16 @@ const venues = [
   },
 ];
 
-export default function VenueGrid() {
+export default function VenueGrid({
+  search,
+}: VenueGridProps) {
+  const filteredVenues = venues.filter((venue) =>
+    venue.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div>
-      {venues.map((venue, index) => (
+      {filteredVenues.map((venue, index) => (
         <VenueCard
           key={index}
           name={venue.name}

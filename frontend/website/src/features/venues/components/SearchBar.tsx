@@ -1,10 +1,12 @@
-"use client";
+type SearchBarProps = {
+  search: string;
+  setSearch: (value: string) => void;
+};
 
-import { useState } from "react";
-
-export default function SearchBar() {
-  const [search, setSearch] = useState("");
-
+export default function SearchBar({
+  search,
+  setSearch,
+}: SearchBarProps) {
   return (
     <div>
       <input
@@ -13,8 +15,6 @@ export default function SearchBar() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-
-      <p>You typed: {search}</p>
     </div>
   );
 }
