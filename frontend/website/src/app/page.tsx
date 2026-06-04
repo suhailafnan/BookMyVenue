@@ -23,12 +23,14 @@ export default function Home() {
       <VenueGrid
   search={search}
   location=""
+  page={1}
 />
 
       <SectionTitle title="Featured Venues" />
       <VenueGrid
   search={search}
   location=""
+  page={1}
 />
     </main>
   );
