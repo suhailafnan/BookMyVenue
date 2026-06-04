@@ -1,25 +1,34 @@
 import VenueCard from "./VenueCard";
 
+const venues = [
+  {
+    name: "Royal Hall",
+    location: "Coimbatore",
+    price: "₹5000",
+  },
+  {
+    name: "Grand Palace",
+    location: "Chennai",
+    price: "₹8000",
+  },
+  {
+    name: "Conference Center",
+    location: "Bangalore",
+    price: "₹12000",
+  },
+];
+
 export default function VenueGrid() {
   return (
     <div>
-      <VenueCard
-        name="Royal Hall"
-        location="Coimbatore"
-        price="₹5000"
-      />
-
-      <VenueCard
-        name="Grand Palace"
-        location="Chennai"
-        price="₹8000"
-      />
-
-      <VenueCard
-        name="Conference Center"
-        location="Bangalore"
-        price="₹12000"
-      />
+      {venues.map((venue, index) => (
+        <VenueCard
+          key={index}
+          name={venue.name}
+          location={venue.location}
+          price={venue.price}
+        />
+      ))}
     </div>
   );
 }
