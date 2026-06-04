@@ -11,27 +11,31 @@ export default function Home() {
   const [search, setSearch] = useState("");
 
   return (
-    <main>
+    <>
       <Hero />
 
-      <SearchBar
-        search={search}
-        setSearch={setSearch}
-      />
+      <main className="max-w-7xl mx-auto px-6">
+        <SearchBar
+          search={search}
+          setSearch={setSearch}
+        />
 
-      <SectionTitle title="Popular Venues" />
-      <VenueGrid
-  search={search}
-  location=""
-  page={1}
-/>
+        <SectionTitle title="Popular Venues" />
 
-      <SectionTitle title="Featured Venues" />
-      <VenueGrid
-  search={search}
-  location=""
-  page={1}
-/>
-    </main>
+        <VenueGrid
+          search={search}
+          location=""
+          page={1}
+        />
+
+        <SectionTitle title="Featured Venues" />
+
+        <VenueGrid
+          search={search}
+          location=""
+          page={1}
+        />
+      </main>
+    </>
   );
 }

@@ -35,7 +35,7 @@ const paginatedVenues = filteredVenues.slice(
 );
 
   return (
-    <div className="grid md:grid-cols-3 gap-6 p-6">
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {paginatedVenues.map((venue) => (
         <VenueCard
           key={venue.id}

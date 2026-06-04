@@ -1,83 +1,53 @@
-import styles from "./Footer.module.css";
-
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaLinkedinIn,
-} from "react-icons/fa";
-
-import { FaXTwitter } from "react-icons/fa6";
-
 export default function Footer() {
   return (
-    <footer className={styles.footerWrapper}>
-      <div className={styles.footerCard}>
+    <footer className="bg-[#120A06] border-t border-[#4A3425] mt-16">
 
-        <div className={styles.topSection}>
+      <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-8">
 
-          <div>
-            <h3 className="font-semibold mb-3">Support</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li>Help Center</li>
-              <li>Contact Us</li>
-              <li>Cancellation Options</li>
-              <li>Safety Information</li>
-            </ul>
-          </div>
+        <div>
+          <h2 className="text-xl font-bold text-[#F5E6D3] mb-4">
+            BookMyVenue
+          </h2>
 
-          <div>
-            <h3 className="font-semibold mb-3">Hosting</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li>Become a Host</li>
-              <li>Host Resources</li>
-              <li>Community Forum</li>
-              <li>Hosting Guidelines</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-semibold mb-3">Company</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li>About Us</li>
-              <li>Careers</li>
-              <li>Privacy Policy</li>
-              <li>Terms & Conditions</li>
-            </ul>
-          </div>
-
+          <p className="text-[#A87C5C]">
+            Find and book premium venues for weddings,
+            conferences and special events.
+          </p>
         </div>
 
-        <div className={styles.bottomSection}>
+        <div>
+          <h3 className="text-[#F5E6D3] font-semibold mb-4">
+            Quick Links
+          </h3>
 
-          <div className={styles.brand}>
-            <div className={styles.logo}></div>
+          <ul className="space-y-2 text-[#A87C5C]">
+            <li>Home</li>
+            <li>Venues</li>
+            <li>About</li>
+            <li>Contact</li>
+          </ul>
+        </div>
 
-            <span>
-              © 2026 BookMyVenue
-            </span>
-          </div>
+        <div>
+          <h3 className="text-[#F5E6D3] font-semibold mb-4">
+            Contact
+          </h3>
 
-          <div className={styles.socials}>
-            <a href="#">
-              <FaFacebookF />
-            </a>
+          <p className="text-[#A87C5C]">
+            support@bookmyvenue.com
+          </p>
 
-            <a href="#">
-              <FaInstagram />
-            </a>
-
-            <a href="#">
-              <FaXTwitter />
-            </a>
-
-            <a href="#">
-              <FaLinkedinIn />
-            </a>
-          </div>
-
+          <p className="text-[#A87C5C]">
+            +91 98765 43210
+          </p>
         </div>
 
       </div>
+
+      <div className="border-t border-[#4A3425] py-4 text-center text-[#A87C5C]">
+        © 2026 BookMyVenue. All rights reserved.
+      </div>
+
     </footer>
   );
 }

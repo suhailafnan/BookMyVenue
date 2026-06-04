@@ -12,7 +12,7 @@ export default function VenueFilters({
       <select
         value={location}
         onChange={(e) => setLocation(e.target.value)}
-        className="border rounded-lg p-3"
+        className="border border-[#4A3425] rounded-lg p-3 bg-white"
       >
         <option value="">All Locations</option>
         <option value="Coimbatore">Coimbatore</option>

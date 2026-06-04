@@ -14,7 +14,7 @@ export default function SearchBar({
       placeholder="Search venues..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
-      className="w-full border rounded-lg p-3"
+      className="w-full border border-[#4A3425] rounded-lg p-4 bg-white"
     />
   </div>
 );
