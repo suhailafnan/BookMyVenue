@@ -1,26 +1,11 @@
 import VenueCard from "./VenueCard";
+import { venues } from "../data/venues";
 
 type VenueGridProps = {
   search: string;
 };
 
-const venues = [
-  {
-    name: "Royal Hall",
-    location: "Coimbatore",
-    price: "₹5000",
-  },
-  {
-    name: "Grand Palace",
-    location: "Chennai",
-    price: "₹8000",
-  },
-  {
-    name: "Conference Center",
-    location: "Bangalore",
-    price: "₹12000",
-  },
-];
+
 
 export default function VenueGrid({
   search,
