@@ -1,7 +1,11 @@
+import VenueFilters from "@/features/venues/components/VenueFilters";
+
 export default function VenuesPage() {
   return (
-    <div>
+    <main>
       <h1>Venue Listing Page</h1>
-    </div>
+
+      <VenueFilters />
+    </main>
   );
 }
