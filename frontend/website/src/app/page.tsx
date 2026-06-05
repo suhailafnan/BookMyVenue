@@ -1,3 +1,7 @@
 export default function Home() {
-  return <h1>Home</h1>;
+  return (
+    <div className="bg-red-500 text-white text-3xl p-10">
+      Tailwind Test
+    </div>
+  );
 }
