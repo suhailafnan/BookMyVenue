@@ -7,6 +7,7 @@ import SearchBar from "@/features/venues/components/SearchBar";
 import VenueGrid from "@/features/venues/components/VenueGrid";
 import SectionTitle from "@/features/venues/components/SectionTitle";
 import Testimonials from "@/features/venues/components/Testimonials";
+import WelcomeTag from "@/components/WelcomeTag";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -39,6 +40,10 @@ export default function Home() {
         />
 
         <Testimonials />
+        <WelcomeTag />
+
+
+    
       </main>
     </>
   );
