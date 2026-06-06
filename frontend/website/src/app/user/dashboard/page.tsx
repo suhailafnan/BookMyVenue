@@ -1,4 +1,4 @@
-gitimport Link from "next/link";
+import Link from "next/link";
 
 const stats = [
   { label: "Total Bookings", value: "3", color: "text-[#C8481A]" },
