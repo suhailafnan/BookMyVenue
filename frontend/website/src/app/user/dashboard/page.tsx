@@ -1,4 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import {
+  defaultUserProfile,
+  getStoredUserProfile,
+  UserProfile,
+} from "@/features/user/profileStore";
 
 const stats = [
   { label: "Total Bookings", value: "3", color: "text-[#C8481A]" },
@@ -44,6 +52,28 @@ const quickActions = [
 ];
 
 export default function DashboardPage() {
+  const [profile, setProfile] = useState<UserProfile>(defaultUserProfile);
+
+  useEffect(() => {
+    const updateProfile = () => {
+      setProfile(getStoredUserProfile());
+    };
+
+    updateProfile();
+    window.addEventListener("bookmyvenue:user-profile-updated", updateProfile);
+    window.addEventListener("storage", updateProfile);
+
+    return () => {
+      window.removeEventListener(
+        "bookmyvenue:user-profile-updated",
+        updateProfile
+      );
+      window.removeEventListener("storage", updateProfile);
+    };
+  }, []);
+
+  const profileInitial = profile.name.trim().charAt(0).toUpperCase() || "U";
+
   return (
     <div className="min-h-screen bg-[#F7F3EE] text-[#1E120A]">
       <header className="border-b border-[#E1D4C3] bg-[#FBF8F4]">
@@ -98,12 +128,25 @@ export default function DashboardPage() {
                 <path d="M13.73 21a2 2 0 0 1-3.46 0" />
               </svg>
             </button>
-            <div className="flex items-center gap-3 rounded-xl border border-[#E1D4C3] bg-white px-3 py-2 shadow-sm">
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#C8481A] text-sm font-bold text-white">
-                A
+            <Link
+              href="/user/profile"
+              className="flex items-center gap-3 rounded-xl border border-[#E1D4C3] bg-white px-3 py-2 shadow-sm hover:border-[#C8B49A]"
+            >
+              {profile.photo ? (
+                <img
+                  src={profile.photo}
+                  alt=""
+                  className="h-9 w-9 rounded-full object-cover"
+                />
+              ) : (
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-[#C8481A] text-sm font-bold text-white">
+                  {profileInitial}
+                </span>
+              )}
+              <span className="hidden font-semibold sm:block">
+                {profile.name}
               </span>
-              <span className="hidden font-semibold sm:block">User</span>
-            </div>
+            </Link>
             <Link
               href="/login"
               className="rounded-xl border border-[#C8B49A] bg-[#FBF8F4] px-4 py-3 text-sm font-semibold text-[#5A3E28]"
@@ -122,7 +165,7 @@ export default function DashboardPage() {
               Good morning
             </p>
             <h1 className="mt-4 text-3xl font-bold sm:text-4xl">
-              Welcome back, User!
+              Welcome back, {profile.name}!
             </h1>
             <p className="mt-4 text-lg text-[#D8C7B5]">
               You have 2 upcoming events this month.
@@ -189,11 +232,19 @@ export default function DashboardPage() {
             <div className="rounded-2xl border border-[#E8DDD0] bg-white p-6 shadow-sm">
               <h2 className="text-2xl font-bold">Profile Summary</h2>
               <div className="mt-6 flex items-center gap-4">
-                <span className="grid h-16 w-16 place-items-center rounded-2xl bg-[#C8481A] text-xl font-bold text-white">
-                  A
-                </span>
+                {profile.photo ? (
+                  <img
+                    src={profile.photo}
+                    alt=""
+                    className="h-16 w-16 rounded-2xl object-cover"
+                  />
+                ) : (
+                  <span className="grid h-16 w-16 place-items-center rounded-2xl bg-[#C8481A] text-xl font-bold text-white">
+                    {profileInitial}
+                  </span>
+                )}
                 <div>
-                  <h3 className="font-bold">User</h3>
+                  <h3 className="font-bold">{profile.name}</h3>
                   <p className="mt-1 text-sm text-[#9A836F]">
                     Customer account
                   </p>
@@ -202,11 +253,11 @@ export default function DashboardPage() {
               <dl className="mt-6 space-y-3 text-sm">
                 <div className="flex justify-between gap-4">
                   <dt className="text-[#9A836F]">Email</dt>
-                  <dd className="font-medium">user@example.com</dd>
+                  <dd className="font-medium">{profile.email}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-[#9A836F]">Phone</dt>
-                  <dd className="font-medium">+91 98765 43210</dd>
+                  <dd className="font-medium">{profile.phone}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-[#9A836F]">Member since</dt>
