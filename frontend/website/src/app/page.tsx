@@ -6,6 +6,7 @@ import Hero from "@/features/venues/components/Hero";
 import SearchBar from "@/features/venues/components/SearchBar";
 import VenueGrid from "@/features/venues/components/VenueGrid";
 import SectionTitle from "@/features/venues/components/SectionTitle";
+import Testimonials from "@/features/venues/components/Testimonials";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -28,6 +29,7 @@ export default function Home() {
           page={1}
         />
 
+
         <SectionTitle title="Featured Venues" />
 
         <VenueGrid
@@ -35,6 +37,8 @@ export default function Home() {
           location=""
           page={1}
         />
+
+        <Testimonials />
       </main>
     </>
   );
