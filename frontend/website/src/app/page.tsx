@@ -8,6 +8,7 @@ import VenueGrid from "@/features/venues/components/VenueGrid";
 import SectionTitle from "@/features/venues/components/SectionTitle";
 import Testimonials from "@/features/venues/components/Testimonials";
 import WelcomeTag from "@/components/WelcomeTag";
+import AdvancedSearchBar from "@/features/venues/components/AdvancedSearchBar";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -17,10 +18,8 @@ export default function Home() {
       <Hero />
 
       <main className="max-w-7xl mx-auto px-6">
-        <SearchBar
-          search={search}
-          setSearch={setSearch}
-        />
+        <AdvancedSearchBar />
+        
 
         <SectionTitle title="Popular Venues" />
 
