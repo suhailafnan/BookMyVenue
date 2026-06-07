@@ -1,48 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-
-const venues = [
-  {
-    name: "The Meridian Grand",
-    city: "Kochi",
-    type: "Wedding",
-    capacity: 650,
-    price: "INR 1.2L",
-    tag: "Premium Hall",
-  },
-  {
-    name: "Palm Court Banquets",
-    city: "Thrissur",
-    type: "Reception",
-    capacity: 420,
-    price: "INR 95k",
-    tag: "Garden Venue",
-  },
-  {
-    name: "Lakeview Convention Centre",
-    city: "Kochi",
-    type: "Conference",
-    capacity: 900,
-    price: "INR 1.8L",
-    tag: "Convention",
-  },
-  {
-    name: "Royal Orchid Hall",
-    city: "Calicut",
-    type: "Birthday",
-    capacity: 250,
-    price: "INR 80k",
-    tag: "Party Hall",
-  },
-];
+import { useEffect, useMemo, useState } from "react";
+import { getWishlistIds, saveWishlistIds, venues } from "@/features/user/venueStore";
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("All Cities");
   const [eventType, setEventType] = useState("All Events");
   const [capacity, setCapacity] = useState("Any Capacity");
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    setWishlistIds(getWishlistIds());
+  }, []);
+
+  function toggleWishlist(venueId: string) {
+    const nextWishlistIds = wishlistIds.includes(venueId)
+      ? wishlistIds.filter((id) => id !== venueId)
+      : [...wishlistIds, venueId];
+
+    setWishlistIds(nextWishlistIds);
+    saveWishlistIds(nextWishlistIds);
+  }
 
   const filteredVenues = useMemo(() => {
     return venues.filter((venue) => {
@@ -85,7 +65,7 @@ export default function Home() {
             <Link href="/user/bookings" className="rounded-lg px-4 py-2 hover:bg-white">
               My Bookings
             </Link>
-            <Link href="/" className="rounded-lg px-4 py-2 hover:bg-white">
+            <Link href="/user/wishlist" className="rounded-lg px-4 py-2 hover:bg-white">
               Wishlist
             </Link>
           </nav>
@@ -216,11 +196,34 @@ export default function Home() {
                   </span>
                 </div>
                 <Link
-                  href="/booking/venue-1"
+                  href={`/booking/${venue.id}`}
                   className="mt-5 inline-flex rounded-xl bg-[#C8481A] px-5 py-3 font-semibold text-white"
                 >
                   Book Venue
                 </Link>
+                <button
+                  type="button"
+                  aria-label={
+                    wishlistIds.includes(venue.id)
+                      ? "Remove from wishlist"
+                      : "Add to wishlist"
+                  }
+                  onClick={() => toggleWishlist(venue.id)}
+                  className="ml-3 mt-5 inline-grid h-12 w-12 place-items-center rounded-xl border border-[#C8B49A] text-[#C8481A]"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="h-5 w-5"
+                    fill={wishlistIds.includes(venue.id) ? "currentColor" : "none"}
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+                  </svg>
+                </button>
               </article>
             ))}
           </div>

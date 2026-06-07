@@ -7,12 +7,12 @@ import {
   getStoredUserProfile,
   UserProfile,
 } from "@/features/user/profileStore";
+import { getWishlistIds } from "@/features/user/venueStore";
 
 const stats = [
   { label: "Total Bookings", value: "3", color: "text-[#C8481A]" },
   { label: "This Month", value: "1", color: "text-[#B8691A]" },
   { label: "Total Spent", value: "INR 2.5L", color: "text-[#8A5A13]" },
-  { label: "Saved Venues", value: "12", color: "text-[#304E8A]" },
 ];
 
 const upcomingBookings = [
@@ -53,26 +53,43 @@ const quickActions = [
 
 export default function DashboardPage() {
   const [profile, setProfile] = useState<UserProfile>(defaultUserProfile);
+  const [wishlistCount, setWishlistCount] = useState(3);
 
   useEffect(() => {
     const updateProfile = () => {
       setProfile(getStoredUserProfile());
     };
+    const updateWishlist = () => {
+      setWishlistCount(getWishlistIds().length);
+    };
 
     updateProfile();
+    updateWishlist();
     window.addEventListener("bookmyvenue:user-profile-updated", updateProfile);
+    window.addEventListener("bookmyvenue:wishlist-updated", updateWishlist);
     window.addEventListener("storage", updateProfile);
+    window.addEventListener("storage", updateWishlist);
 
     return () => {
       window.removeEventListener(
         "bookmyvenue:user-profile-updated",
         updateProfile
       );
+      window.removeEventListener("bookmyvenue:wishlist-updated", updateWishlist);
       window.removeEventListener("storage", updateProfile);
+      window.removeEventListener("storage", updateWishlist);
     };
   }, []);
 
   const profileInitial = profile.name.trim().charAt(0).toUpperCase() || "U";
+  const dashboardStats = [
+    ...stats,
+    {
+      label: "Saved Venues",
+      value: String(wishlistCount),
+      color: "text-[#304E8A]",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[#F7F3EE] text-[#1E120A]">
@@ -103,7 +120,10 @@ export default function DashboardPage() {
             >
               My Bookings
             </Link>
-            <Link href="/" className="rounded-lg px-4 py-2 hover:bg-white">
+            <Link
+              href="/user/wishlist"
+              className="rounded-lg px-4 py-2 hover:bg-white"
+            >
               Wishlist
             </Link>
           </nav>
@@ -180,7 +200,7 @@ export default function DashboardPage() {
         </section>
 
         <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
+          {dashboardStats.map((stat) => (
             <div
               key={stat.label}
               className="rounded-2xl border border-[#E8DDD0] bg-white p-6 shadow-sm"
