@@ -12,8 +12,8 @@ const getProducts = async (req, res) => {
 
     // Get all products
     // Also fetch category details
-const products = await Product.find()
-  .populate("category");
+    const products = await Product.find()
+      .populate("category");
 
     // Send products as JSON response
     res.status(200).json(products);
@@ -35,7 +35,7 @@ const products = await Product.find()
 const createProduct = async (req, res) => {
   try {
 
-    // req.body contains data sent by user
+    // Create new product using request body
     const product = await Product.create(req.body);
 
     // Return newly created product
@@ -61,35 +61,34 @@ const getProductById = async (req, res) => {
     // Get ID from URL
     const productId = req.params.id;
 
-    // Find product by ID
-    // Also fetch category details
-const product = await Product.findById(productId)
-  .populate("category");
+    // Find product and populate category
+    const product = await Product.findById(productId)
+      .populate("category");
 
-    // Check product exists
     if (!product) {
       return res.status(404).json({
         message: "Product not found",
       });
     }
 
-    // Return product
     res.status(200).json(product);
 
   } catch (error) {
 
-    // If error occurs, send error message
     res.status(500).json({
       message: error.message,
     });
   }
 };
 
-// PUT /api/products/:id
-// Update product
 
+// =====================================
+// UPDATE PRODUCT
+// URL: PUT /api/products/:id
+// =====================================
 const updateProduct = async (req, res) => {
   try {
+
     const product = await Product.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -103,7 +102,9 @@ const updateProduct = async (req, res) => {
     }
 
     res.json(product);
+
   } catch (error) {
+
     res.status(500).json({
       message: error.message,
     });
@@ -111,11 +112,13 @@ const updateProduct = async (req, res) => {
 };
 
 
-// DELETE /api/products/:id
-// Delete product
-
+// =====================================
+// DELETE PRODUCT
+// URL: DELETE /api/products/:id
+// =====================================
 const deleteProduct = async (req, res) => {
   try {
+
     const product = await Product.findByIdAndDelete(req.params.id);
 
     if (!product) {
@@ -127,7 +130,9 @@ const deleteProduct = async (req, res) => {
     res.json({
       message: "Product deleted successfully",
     });
+
   } catch (error) {
+
     res.status(500).json({
       message: error.message,
     });
