@@ -30,6 +30,9 @@ app.use(cors());
 // Accept JSON data
 app.use(express.json());
 
+// Serve uploaded images
+app.use("/uploads", express.static("uploads"));
+
 // Product API Routes
 // All requests starting with /api/products
 // will go to productRoutes.js
