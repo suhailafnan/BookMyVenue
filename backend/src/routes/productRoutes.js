@@ -8,6 +8,7 @@ const router = express.Router();
 const {
   getProducts,
   createProduct,
+  getProductById,
 } = require("../controllers/productController");
 
 // GET /api/products
@@ -18,6 +19,13 @@ router.get("/", getProducts);
 // POST /api/products
 // Create new product
 router.post("/", createProduct);
+
+// =====================================
+// GET PRODUCT BY ID
+// URL: GET /api/products/:id
+// =====================================
+router.get("/:id", getProductById);
+
 
 // Export router
 module.exports = router;

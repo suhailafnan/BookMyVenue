@@ -1,5 +1,5 @@
 // Import Product Model
-// This gives access to the products collection in MongoDB
+// This gives access to products collection in MongoDB
 const Product = require("../models/Product");
 
 
@@ -27,14 +27,13 @@ const getProducts = async (req, res) => {
 
 
 // =====================================
-// CREATE NEW PRODUCT
+// CREATE PRODUCT
 // URL: POST /api/products
 // =====================================
 const createProduct = async (req, res) => {
   try {
 
     // req.body contains data sent by user
-    // Save product into MongoDB
     const product = await Product.create(req.body);
 
     // Return newly created product
@@ -50,9 +49,42 @@ const createProduct = async (req, res) => {
 };
 
 
+// =====================================
+// GET PRODUCT BY ID
+// URL: GET /api/products/:id
+// =====================================
+const getProductById = async (req, res) => {
+  try {
+
+    // Get ID from URL
+    const productId = req.params.id;
+
+    // Find product using MongoDB _id
+    const product = await Product.findById(productId);
+
+    // Check product exists
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    // Return product
+    res.status(200).json(product);
+
+  } catch (error) {
+
+    // If error occurs, send error message
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
 // Export functions
-// So routes can use them
 module.exports = {
   getProducts,
   createProduct,
+  getProductById,
 };
