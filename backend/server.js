@@ -13,6 +13,8 @@ const connectDB = require("./src/config/db");
 // Import Product Routes
 const productRoutes = require("./src/routes/productRoutes");
 
+const categoryRoutes = require("./src/routes/categoryRoutes");
+
 // Load .env file
 dotenv.config();
 
@@ -37,6 +39,8 @@ app.use("/api/products", productRoutes);
 app.get("/", (req, res) => {
   res.send("BookMyVenue Backend Running");
 });
+
+app.use("/api/categories", categoryRoutes);
 
 // Port Number
 const PORT = process.env.PORT || 5000;
