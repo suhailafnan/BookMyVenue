@@ -10,8 +10,10 @@ const Product = require("../models/Product");
 const getProducts = async (req, res) => {
   try {
 
-    // Fetch all products from MongoDB
-    const products = await Product.find();
+    // Get all products
+    // Also fetch category details
+const products = await Product.find()
+  .populate("category");
 
     // Send products as JSON response
     res.status(200).json(products);
@@ -59,8 +61,10 @@ const getProductById = async (req, res) => {
     // Get ID from URL
     const productId = req.params.id;
 
-    // Find product using MongoDB _id
-    const product = await Product.findById(productId);
+    // Find product by ID
+    // Also fetch category details
+const product = await Product.findById(productId)
+  .populate("category");
 
     // Check product exists
     if (!product) {
