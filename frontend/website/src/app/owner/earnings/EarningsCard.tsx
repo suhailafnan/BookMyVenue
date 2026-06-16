@@ -1,37 +1,40 @@
-export default function EarningsCard() {
-  const rows = [
-    { label: "Confirmed Revenue", value: "Rs 12.2L", icon: "▲" },
-    { label: "Operating Expenditure", value: "Rs 2.51L", icon: "▤" },
-    { label: "Net Profit", value: "Rs 9.69L", icon: "◆" },
-    { label: "Pending Payout", value: "Rs 1.34L", icon: "◒" },
-  ];
+import EmptyState from "@/components/EmptyState";
+import { getOwnerEarnings } from "@/lib/api";
+
+export default async function EarningsCard() {
+  const earnings = await getOwnerEarnings();
+
+  if (!earnings) {
+    return <EmptyState title="No owner earnings" message="Earnings will appear after an owner profile and booking records exist." />;
+  }
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_1.4fr]">
       <div className="grid gap-4 sm:grid-cols-2">
-        {rows.map((row) => (
-          <div key={row.label} className="rounded-lg border border-[#C8B49A] bg-[#FFFFFF] p-4 shadow-[0_12px_30px_rgba(30,18,10,0.06)]">
-            <p className="text-sm text-[#7A6050]">{row.icon} {row.label}</p>
-            <p className="mt-2 text-2xl font-semibold text-[#A07020]">{row.value}</p>
+        {earnings.cards.map((row) => (
+          <div key={row.label} className="bmv-card rounded-lg p-4">
+            <p className="text-sm text-[#7A6050]">
+              {row.icon} {row.label}
+            </p>
+            <p className="mt-2 font-mono text-2xl font-semibold text-[#A07020]">{row.value}</p>
           </div>
         ))}
       </div>
 
-      <section className="rounded-lg border border-[#C8B49A] bg-[#FFFFFF] p-5 shadow-[0_12px_30px_rgba(30,18,10,0.06)]">
-        <h2 className="text-lg font-semibold text-[#1E120A]">◆ Venue Profit Split</h2>
+      <section className="bmv-card rounded-lg p-5">
+        <h2 className="text-lg font-semibold text-[#1E120A]">Venue Profit Split</h2>
         <div className="mt-4 space-y-4">
-          {[
-            { label: "Grand Meridian Hall", value: "Rs 6.81L", width: "88%" },
-            { label: "Ironwood Courtyard", value: "Rs 1.80L", width: "52%" },
-            { label: "Sunset Banquet Studio", value: "Rs 1.08L", width: "34%" },
-          ].map((item) => (
-            <div key={item.label}>
+          {earnings.profitSplit.length === 0 ? (
+            <EmptyState title="No profit split yet" message="Venue profit split will appear after venues receive finance data." />
+          ) : null}
+          {earnings.profitSplit.map((item) => (
+            <div key={item.id}>
               <div className="mb-2 flex justify-between text-sm">
                 <span className="text-[#5A3E28]">{item.label}</span>
                 <span className="font-semibold text-[#8A5C10]">{item.value}</span>
               </div>
-              <div className="h-3 rounded-full bg-[#FDFAF6]">
-                <div className="h-3 rounded-full bg-[#C8481A]" style={{ width: item.width }} />
+              <div className="bmv-soft-card h-3 rounded-full">
+                <div className="h-3 rounded-full bg-[#C8481A] shadow-[0_6px_14px_rgba(200,72,26,0.2)]" style={{ width: item.width }} />
               </div>
             </div>
           ))}

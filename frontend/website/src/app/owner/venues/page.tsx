@@ -1,9 +1,11 @@
 import Link from "next/link";
 import VenueTable from "./VenueTable";
 
+export const dynamic = "force-dynamic";
+
 export default function OwnerVenuesPage() {
   return (
-    <main className="min-h-screen bg-[#F7F3EE] p-6 text-[#1E120A]">
+    <main className="bmv-page min-h-screen p-6 text-[#1E120A]">
       <div className="mx-auto max-w-7xl space-y-6">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>

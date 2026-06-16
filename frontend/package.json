@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm --prefix website run dev",
+    "dev:backend": "npm --prefix ../backend run dev",
     "build": "npm --prefix website run build",
     "start": "npm --prefix website run start",
     "lint": "npm --prefix website run lint"

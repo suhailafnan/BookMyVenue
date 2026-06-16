@@ -1,27 +1,46 @@
 import Link from "next/link";
 
-export default function OwnerProfileSummary() {
+type OwnerProfileSummaryProps = {
+  profile: {
+    name: string;
+    email: string;
+    verification: string;
+    activeListings: number;
+    rating: number;
+  };
+};
+
+export default function OwnerProfileSummary({ profile }: OwnerProfileSummaryProps) {
+  const initial = profile.name.charAt(0).toUpperCase();
+
   return (
-    <section className="rounded-lg border border-[#C8B49A] bg-[#FFFFFF] p-6 shadow-[0_16px_40px_rgba(30,18,10,0.08)]">
+    <section className="bmv-hero-card rounded-lg p-6">
       <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
         <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#C8481A] text-2xl font-semibold text-white shadow-[0_10px_24px_rgba(200,72,26,0.28)]">
-            A
+          <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#086C6C] text-2xl font-semibold text-white shadow-[0_12px_28px_rgba(8,108,108,0.24)]">
+            {initial}
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-[#1E120A]">◈ Anandhuu</h1>
-            <p className="text-sm text-[#7A6050]">anandhuu@example.com</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#B8691A]">Owner Snapshot</p>
+            <h1 className="mt-1 text-2xl font-semibold text-[#1E120A]">{profile.name}</h1>
+            <p className="text-sm text-[#7A6050]">{profile.email}</p>
             <div className="mt-3 flex flex-wrap gap-2 text-xs font-medium">
-              <span className="rounded-full bg-[#FDFAF6] px-3 py-1 text-[#8A5C10]">✓ Verified Host</span>
-              <span className="rounded-full bg-[#1C2860] px-3 py-1 text-white">◈ 3 Active Listings</span>
-              <span className="rounded-full bg-[#FDFAF6] px-3 py-1 text-[#B8691A]">✦ 4.8 Avg Rating</span>
+              <span className="bmv-badge bmv-badge-teal">{profile.verification}</span>
+              <span className="bmv-badge bmv-badge-navy">{profile.activeListings} Active Listings</span>
+              <span className="bmv-badge bmv-badge-gold">{profile.rating ? profile.rating.toFixed(1) : "New"} Avg Rating</span>
             </div>
           </div>
         </div>
 
-        <Link className="w-fit rounded-md bg-[#C8481A] px-5 py-3 font-medium text-white" href="/owner/venues/add">
-          + Add Venue
-        </Link>
+        <div className="space-y-3">
+          <div className="bmv-soft-card rounded-lg p-4 text-sm text-[#5A3E28]">
+            <p className="font-semibold text-[#1E120A]">Business Readiness</p>
+            <p className="mt-1 text-[#7A6050]">Keep venue details and availability current to turn enquiries into confirmed bookings.</p>
+          </div>
+          <Link className="bmv-accent-button inline-flex w-fit rounded-md px-5 py-3 font-medium" href="/owner/venues/add">
+            Add Venue
+          </Link>
+        </div>
       </div>
     </section>
   );
