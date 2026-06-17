@@ -1,13 +1,13 @@
 // Import Express
 const express = require("express");
 
-// Create Router object
+// Create Router
 const router = express.Router();
 
-// Import upload middleware
+// Import Upload Middleware
 const upload = require("../middleware/uploadMiddleware");
 
-// Import controller functions
+// Import Controllers
 const {
   getProducts,
   createProduct,
@@ -33,6 +33,34 @@ router.post("/", createProduct);
 
 
 // =====================================
+// GET PRODUCT BY ID
+// URL: GET /api/products/:id
+// =====================================
+router.get("/:id", getProductById);
+
+
+// =====================================
+// UPDATE PRODUCT
+// URL: PUT /api/products/:id
+// =====================================
+router.put("/:id", updateProduct);
+
+
+// =====================================
+// DELETE PRODUCT
+// URL: DELETE /api/products/:id
+// =====================================
+router.delete("/:id", deleteProduct);
+
+
+// =====================================
+// UPDATE PRODUCT STOCK
+// URL: PUT /api/products/:id/stock
+// =====================================
+router.put("/:id/stock", updateStock);
+
+
+// =====================================
 // UPLOAD PRODUCT IMAGE
 // URL: POST /api/products/upload
 // =====================================
@@ -40,10 +68,6 @@ router.post(
   "/upload",
   upload.single("image"),
   (req, res) => {
-
-    console.log("HEADERS =", req.headers);
-    console.log("FILE =", req.file);
-    console.log("BODY =", req.body);
 
     if (!req.file) {
       return res.status(400).json({
@@ -62,34 +86,5 @@ router.post(
   }
 );
 
-
-// =====================================
-// GET PRODUCT BY ID
-// URL: GET /api/products/:id
-// =====================================
-router.get("/:id", getProductById);
-
-
-// =====================================
-// UPDATE PRODUCT
-// URL: PUT /api/products/:id
-// =====================================
-router.put("/:id", updateProduct);
-
-
-// =====================================
-// UPDATE STOCK
-// URL: PUT /api/products/:id/stock
-// =====================================
-router.put("/:id/stock", updateStock);
-
-
-// =====================================
-// DELETE PRODUCT
-// URL: DELETE /api/products/:id
-// =====================================
-router.delete("/:id", deleteProduct);
-
-
-// Export router
+// Export Router
 module.exports = router;

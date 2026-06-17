@@ -30,6 +30,33 @@ const productSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+
+    // =====================================
+    // PRODUCT METADATA
+    // =====================================
+
+    location: {
+      type: String,
+    },
+
+    capacity: {
+      type: Number,
+    },
+
+    rating: {
+      type: Number,
+      default: 0,
+    },
+
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+
+    status: {
+      type: String,
+      default: "active",
+    },
   },
   {
     timestamps: true,

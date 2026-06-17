@@ -2,25 +2,60 @@
 // This gives access to products collection in MongoDB
 const Product = require("../models/Product");
 
-
 // =====================================
-// GET ALL PRODUCTS
+// GET ALL PRODUCTS + SEARCH + FILTER
 // URL: GET /api/products
+// URL: GET /api/products?keyword=hall
+// URL: GET /api/products?category=id
+// URL: GET /api/products?minPrice=1000
+// URL: GET /api/products?maxPrice=5000
 // =====================================
 const getProducts = async (req, res) => {
   try {
 
-    // Get all products
-    // Also fetch category details
-    const products = await Product.find()
+    const keyword = req.query.keyword;
+    const category = req.query.category;
+    const minPrice = req.query.minPrice;
+    const maxPrice = req.query.maxPrice;
+
+    let searchFilter = {};
+
+    // Search by product name
+    if (keyword) {
+      searchFilter.name = {
+        $regex: keyword,
+        $options: "i",
+      };
+    }
+
+    // Filter by category
+    if (category) {
+      searchFilter.category = category;
+    }
+
+    // Filter by minimum price
+    if (minPrice) {
+      searchFilter.price = {
+        ...searchFilter.price,
+        $gte: Number(minPrice),
+      };
+    }
+
+    // Filter by maximum price
+    if (maxPrice) {
+      searchFilter.price = {
+        ...searchFilter.price,
+        $lte: Number(maxPrice),
+      };
+    }
+
+    const products = await Product.find(searchFilter)
       .populate("category");
 
-    // Send products as JSON response
     res.status(200).json(products);
 
   } catch (error) {
 
-    // If error occurs, send error message
     res.status(500).json({
       message: error.message,
     });
@@ -139,6 +174,39 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// =====================================
+// UPDATE STOCK
+// URL: PUT /api/products/:id/stock
+// =====================================
+const updateStock = async (req, res) => {
+  try {
+
+    const { stock } = req.body;
+
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    product.stock = stock;
+
+    await product.save();
+
+    res.status(200).json({
+      message: "Stock updated successfully",
+      product,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 // Export functions
 module.exports = {
@@ -147,4 +215,5 @@ module.exports = {
   getProductById,
   updateProduct,
   deleteProduct,
+  updateStock,
 };
