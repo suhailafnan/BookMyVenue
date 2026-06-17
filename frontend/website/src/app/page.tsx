@@ -1,6 +1,5 @@
 "use client";
 
-<<<<<<< HEAD
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -28,7 +27,6 @@ export default function Home() {
           }}
         >
           <h2>{product.name}</h2>
-
           <p>{product.description}</p>
 
           <p>
@@ -56,52 +54,5 @@ export default function Home() {
         </div>
       ))}
     </div>
-=======
-import { useState } from "react";
-
-import Hero from "@/features/venues/components/Hero";
-import SearchBar from "@/features/venues/components/SearchBar";
-import VenueGrid from "@/features/venues/components/VenueGrid";
-import SectionTitle from "@/features/venues/components/SectionTitle";
-import Testimonials from "@/features/venues/components/Testimonials";
-import WelcomeTag from "@/components/WelcomeTag";
-import AdvancedSearchBar from "@/features/venues/components/AdvancedSearchBar";
-
-export default function Home() {
-  const [search, setSearch] = useState("");
-
-  return (
-    <>
-      <Hero />
-
-      <main className="max-w-7xl mx-auto px-6">
-        <AdvancedSearchBar />
-        
-
-        <SectionTitle title="Popular Venues" />
-
-        <VenueGrid
-          search={search}
-          location=""
-          page={1}
-        />
-
-
-        <SectionTitle title="Featured Venues" />
-
-        <VenueGrid
-          search={search}
-          location=""
-          page={1}
-        />
-
-        <Testimonials />
-        <WelcomeTag />
-
-
-    
-      </main>
-    </>
->>>>>>> feature/footer
   );
 }
