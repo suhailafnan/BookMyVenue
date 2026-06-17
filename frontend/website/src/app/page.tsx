@@ -8,12 +8,8 @@ export default function Home() {
   useEffect(() => {
     fetch("http://localhost:5000/api/products")
       .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      .then((data) => setProducts(data))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
@@ -25,8 +21,8 @@ export default function Home() {
           key={product._id}
           style={{
             border: "1px solid #ccc",
-            margin: "10px",
-            padding: "10px",
+            padding: "20px",
+            marginBottom: "20px",
             borderRadius: "10px",
           }}
         >
@@ -35,32 +31,27 @@ export default function Home() {
           <p>{product.description}</p>
 
           <p>
-            <strong>Price:</strong> ₹{product.price}
+            <b>Price:</b> ₹{product.price}
           </p>
 
           <p>
-            <strong>Stock:</strong> {product.stock}
+            <b>Stock:</b> {product.stock}
           </p>
 
           <p>
-            <strong>Category:</strong>{" "}
-            {product.category?.name}
+            <b>Category:</b>{" "}
+            {typeof product.category === "object"
+              ? product.category.name
+              : product.category}
           </p>
 
-          <p>
-            <strong>Image File:</strong>{" "}
-            {product.image}
-          </p>
-
-          <img
-            src={`http://localhost:5000/uploads/${product.image}`}
-            alt={product.name}
-            width="300"
-            style={{
-              marginTop: "10px",
-              borderRadius: "8px",
-            }}
-          />
+          {product.image && (
+            <img
+              src={`http://localhost:5000/uploads/${product.image}`}
+              alt={product.name}
+              width="400"
+            />
+          )}
         </div>
       ))}
     </div>
