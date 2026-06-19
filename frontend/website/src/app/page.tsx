@@ -1,234 +1,154 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { getWishlistIds, saveWishlistIds, venues } from "@/features/user/venueStore";
+import Image from "next/image";
+import VenueCard from "@/features/venues/components/VenueCard";
+import HomeSearch from "@/features/venues/components/HomeSearch";
+import { fallbackCategories, venues } from "@/features/venues/data/venues";
+import { getCategories, getVenues } from "@/services/api";
 
-export default function Home() {
-  const [query, setQuery] = useState("");
-  const [city, setCity] = useState("All Cities");
-  const [eventType, setEventType] = useState("All Events");
-  const [capacity, setCapacity] = useState("Any Capacity");
-  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    setWishlistIds(getWishlistIds());
-  }, []);
-
-  function toggleWishlist(venueId: string) {
-    const nextWishlistIds = wishlistIds.includes(venueId)
-      ? wishlistIds.filter((id) => id !== venueId)
-      : [...wishlistIds, venueId];
-
-    setWishlistIds(nextWishlistIds);
-    saveWishlistIds(nextWishlistIds);
-  }
-
-  const filteredVenues = useMemo(() => {
-    return venues.filter((venue) => {
-      const matchesQuery =
-        venue.name.toLowerCase().includes(query.toLowerCase()) ||
-        venue.tag.toLowerCase().includes(query.toLowerCase());
-      const matchesCity = city === "All Cities" || venue.city === city;
-      const matchesType =
-        eventType === "All Events" || venue.type === eventType;
-      const matchesCapacity =
-        capacity === "Any Capacity" ||
-        (capacity === "Up to 300" && venue.capacity <= 300) ||
-        (capacity === "300 - 700" &&
-          venue.capacity > 300 &&
-          venue.capacity <= 700) ||
-        (capacity === "700+" && venue.capacity > 700);
-
-      return matchesQuery && matchesCity && matchesType && matchesCapacity;
-    });
-  }, [capacity, city, eventType, query]);
+export default async function Home() {
+  const { homeVenues, categories } = await loadHomeData();
+  const featuredVenues = homeVenues.slice(0, 3);
+  const popularVenues = homeVenues.slice(3, 6);
+  const cityOptions = Array.from(
+    new Set(homeVenues.map((venue) => venue.metadata.location).filter(Boolean))
+  );
+  const categoryOptions = categories.map((category) => category.name);
 
   return (
-    <div className="min-h-screen bg-[#F7F3EE] text-[#1E120A]">
-      <header className="border-b border-[#E1D4C3] bg-[#FBF8F4]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
-          <Link href="/user/dashboard" className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#C8481A] text-sm font-bold text-white shadow-sm">
-              BM
-            </span>
-            <span className="text-2xl font-bold">BookMyVenue</span>
-          </Link>
-
-          <nav className="hidden items-center gap-2 text-sm font-medium text-[#7A6050] md:flex">
-            <Link href="/user/dashboard" className="rounded-lg px-4 py-2 hover:bg-white">
-              Home
-            </Link>
-            <Link href="/" className="rounded-lg bg-[#F2E3DA] px-4 py-2 text-[#C8481A]">
-              Search
-            </Link>
-            <Link href="/user/bookings" className="rounded-lg px-4 py-2 hover:bg-white">
-              My Bookings
-            </Link>
-            <Link href="/user/wishlist" className="rounded-lg px-4 py-2 hover:bg-white">
-              Wishlist
-            </Link>
-          </nav>
-
-          <Link
-            href="/login"
-            className="rounded-xl border border-[#C8B49A] bg-[#FBF8F4] px-4 py-3 text-sm font-semibold text-[#5A3E28]"
-          >
-            Exit
-          </Link>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-5 py-10">
-        <section className="rounded-3xl bg-[#21120A] p-8 text-white shadow-sm sm:p-12">
-          <p className="text-sm font-semibold text-[#C8B49A]">Venue Search</p>
-          <h1 className="mt-3 text-3xl font-bold sm:text-4xl">
-            Find the right venue for your next event
-          </h1>
-          <p className="mt-4 max-w-2xl text-[#D8C7B5]">
-            Search by venue name, city, event type, and guest capacity.
+    <main>
+      <section className="relative min-h-[calc(100vh-72px)] overflow-hidden bg-[#1E120A]">
+        <Image
+          src="/images/hero.jpg"
+          alt="Premium venue interior"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-70"
+        />
+        <div className="absolute inset-0 bg-[#1E120A]/60" />
+        <div className="relative mx-auto flex min-h-[calc(100vh-72px)] max-w-7xl flex-col justify-center px-4 py-16 text-white sm:px-6 lg:px-8">
+          <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#C8B49A]">
+            Premium venue booking
           </p>
-
-          <div className="mt-8 grid gap-4 rounded-2xl bg-white p-4 text-[#1E120A] shadow-lg md:grid-cols-[1.5fr_1fr_1fr_1fr]">
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-[#7A6050]">
-                Search
-              </span>
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Venue name or hall type"
-                className="w-full rounded-xl border border-[#C8B49A] px-4 py-3 outline-none focus:border-[#C8481A]"
-              />
-            </label>
-
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-[#7A6050]">
-                City
-              </span>
-              <select
-                value={city}
-                onChange={(event) => setCity(event.target.value)}
-                className="w-full rounded-xl border border-[#C8B49A] px-4 py-3 outline-none focus:border-[#C8481A]"
-              >
-                <option>All Cities</option>
-                <option>Kochi</option>
-                <option>Thrissur</option>
-                <option>Calicut</option>
-              </select>
-            </label>
-
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-[#7A6050]">
-                Event Type
-              </span>
-              <select
-                value={eventType}
-                onChange={(event) => setEventType(event.target.value)}
-                className="w-full rounded-xl border border-[#C8B49A] px-4 py-3 outline-none focus:border-[#C8481A]"
-              >
-                <option>All Events</option>
-                <option>Wedding</option>
-                <option>Reception</option>
-                <option>Conference</option>
-                <option>Birthday</option>
-              </select>
-            </label>
-
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-[#7A6050]">
-                Guests
-              </span>
-              <select
-                value={capacity}
-                onChange={(event) => setCapacity(event.target.value)}
-                className="w-full rounded-xl border border-[#C8B49A] px-4 py-3 outline-none focus:border-[#C8481A]"
-              >
-                <option>Any Capacity</option>
-                <option>Up to 300</option>
-                <option>300 - 700</option>
-                <option>700+</option>
-              </select>
-            </label>
-          </div>
-        </section>
-
-        <section className="mt-8">
-          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
-            <div>
-              <h2 className="text-2xl font-bold">Available Venues</h2>
-              <p className="mt-1 text-[#7A6050]">
-                {filteredVenues.length} venues match your search.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setQuery("");
-                setCity("All Cities");
-                setEventType("All Events");
-                setCapacity("Any Capacity");
-              }}
-              className="w-fit rounded-xl border border-[#C8B49A] px-5 py-3 text-sm font-semibold text-[#5A3E28]"
+          <h1 className="mt-5 max-w-4xl text-4xl font-bold leading-tight sm:text-5xl lg:text-7xl">
+            BookMyVenue
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-7 text-[#F7F3EE] sm:text-lg sm:leading-8">
+            Discover wedding halls, banquet homes, boardrooms, and garden
+            venues with transparent pricing, availability, and venue details.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/venues"
+              className="rounded-md bg-[#C8481A] px-6 py-3 text-center font-semibold text-white transition hover:bg-[#B8691A]"
             >
-              Clear Filters
-            </button>
+              Explore Venues
+            </Link>
+            <Link
+              href="/contact"
+              className="rounded-md border border-white/70 px-6 py-3 text-center font-semibold text-white transition hover:bg-white hover:text-[#1E120A]"
+            >
+              Talk to Us
+            </Link>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
-            {filteredVenues.map((venue) => (
-              <article
-                key={venue.name}
-                className="rounded-2xl border border-[#E8DDD0] bg-white p-6 shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold text-[#B8691A]">
-                      {venue.tag}
-                    </p>
-                    <h3 className="mt-2 text-xl font-bold">{venue.name}</h3>
-                    <p className="mt-2 text-[#7A6050]">
-                      {venue.city} - {venue.type} - {venue.capacity} guests
-                    </p>
-                  </div>
-                  <span className="font-bold text-[#C8481A]">
-                    {venue.price}
-                  </span>
-                </div>
-                <Link
-                  href={`/booking/${venue.id}`}
-                  className="mt-5 inline-flex rounded-xl bg-[#C8481A] px-5 py-3 font-semibold text-white"
-                >
-                  Book Venue
-                </Link>
-                <button
-                  type="button"
-                  aria-label={
-                    wishlistIds.includes(venue.id)
-                      ? "Remove from wishlist"
-                      : "Add to wishlist"
-                  }
-                  onClick={() => toggleWishlist(venue.id)}
-                  className="ml-3 mt-5 inline-grid h-12 w-12 place-items-center rounded-xl border border-[#C8B49A] text-[#C8481A]"
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="h-5 w-5"
-                    fill={wishlistIds.includes(venue.id) ? "currentColor" : "none"}
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
-                  </svg>
-                </button>
-              </article>
+      <section className="relative z-10 mx-auto -mt-10 max-w-6xl px-4 sm:px-6 lg:px-8">
+        <HomeSearch categories={categoryOptions} cities={cityOptions} />
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <SectionHeading label="Featured" title="Handpicked Venues" />
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          {featuredVenues.map((venue) => (
+            <VenueCard key={venue._id} venue={venue} />
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-[#FDFAF6] py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading label="Popular" title="Most Booked Spaces" />
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            {popularVenues.map((venue) => (
+              <VenueCard key={venue._id} venue={venue} />
             ))}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <SectionHeading label="Categories" title="Plan by Occasion" />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {categories.map((category) => (
+            <Link
+              key={category._id}
+              href={`/venues?category=${category.name}`}
+              className="rounded-lg border border-[#C8B49A] bg-white p-5 transition hover:-translate-y-1 hover:shadow-lg"
+            >
+              <h3 className="text-lg font-bold text-[#1E120A]">
+                {category.name}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-[#7A6050]">
+                {category.description}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-[#1C2860] py-16 text-white lg:py-20">
+        <div className="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
+          {[
+            "The shortlist and pricing helped us close a wedding venue in one afternoon.",
+            "Clean inventory, clear capacity numbers, and fast vendor responses.",
+            "The corporate venue filters saved our event team hours of calls.",
+          ].map((quote, index) => (
+            <blockquote
+              key={quote}
+              className="rounded-lg border border-white/15 bg-white/10 p-6"
+            >
+              <p className="text-lg leading-8">{quote}</p>
+              <footer className="mt-5 text-sm text-[#C8B49A]">
+                Verified host {index + 1}
+              </footer>
+            </blockquote>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+async function loadHomeData() {
+  try {
+    const [venueResponse, categoryResponse] = await Promise.all([
+      getVenues({ page: 1, limit: 6, sort: "createdAt:desc" }),
+      getCategories(),
+    ]);
+
+    return {
+      homeVenues: venueResponse.data.length ? venueResponse.data : venues,
+      categories: categoryResponse.length ? categoryResponse : fallbackCategories,
+    };
+  } catch {
+    return {
+      homeVenues: venues,
+      categories: fallbackCategories,
+    };
+  }
+}
+
+function SectionHeading({ label, title }: { label: string; title: string }) {
+  return (
+    <div className="max-w-2xl">
+      <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#A07020]">
+        {label}
+      </p>
+      <h2 className="mt-3 text-3xl font-bold text-[#1E120A] md:text-4xl">
+        {title}
+      </h2>
     </div>
   );
 }

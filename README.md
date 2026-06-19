@@ -1,47 +1,241 @@
-# BookMyVenue (by WeCode)
+# BookMyVenue
 
-BookMyVenue is a 100% open-source initiative built by the **WeCode community**, designed to simplify the process of finding and booking venues in local areas. This is a platform built for the community, by the community. Whether you're looking for a cozy cafe for a quick meetup, a spacious auditorium for a community event, or a scenic outdoor space for a personal celebration, BookMyVenue aims to connect people with the perfect space—without the commercial overhead.
+BookMyVenue is a production-ready full-stack venue booking application for discovering, filtering, and viewing premium event venues.
 
-## 🚧 The Problem
+## Tech Stack
 
-Organizing an event—big or small—often comes with the hassle of finding a suitable location. Traditionally, people struggle with:
+Frontend:
 
-- **Fragmented Information:** Venue details, availability, and pricing are scattered across various websites or require time-consuming phone calls.
-- **Lack of Transparency:** Hidden costs, unclear amenities, and outdated photos make it hard to trust what you are booking.
-- **Time Inefficiency:** Manually comparing options, negotiating, and finalizing bookings is a tedious and frustrating process for organizers.
-- **Underutilized Spaces:** Owners of small or unique spaces (like local cafes, art studios, or boutique halls) often lack the marketing reach to showcase their venues to a wider audience.
+- Next.js 16 App Router
+- TypeScript
+- Tailwind CSS
+- Axios
+- React Icons
 
-## 💡 The Solution
+Backend:
 
-BookMyVenue acts as a completely free and open bridge between space owners and the community, offering a seamless booking experience for everyone:
+- Node.js
+- Express.js
+- MongoDB Atlas
+- Mongoose
+- Multer
+- REST APIs
 
-- **Centralized Marketplace:** A single platform to discover a wide variety of venues, ranging from conventional banquet halls and auditoriums to unconventional spaces like cafes, studios, and mall pop-up spaces.
-- **Real-Time Availability & Pricing:** Transparent access to schedules and upfront pricing so you can make informed decisions quickly without the back-and-forth.
-- **Detailed Listings:** High-quality photos, comprehensive amenity lists (e.g., Wi-Fi, parking, AV equipment), and verified user reviews.
-- **Simplified Booking Process:** Easy, hassle-free online reservations in just a few clicks.
-- **Empowering Local Communities:** Providing small venue owners, community centers, and local spaces an open platform to manage their underutilized spaces and share them with the public.
+## Architecture
 
-## 🗺️ Project Roadmap
+```text
+frontend/website
+  src/app        Route pages and app boundaries
+  src/components Shared layout components
+  src/features   Feature-specific UI
+  src/hooks      Reusable React hooks
+  src/lib        Utility functions
+  src/services   Axios API layer
+  src/types      TypeScript interfaces
 
-We are building BookMyVenue iteratively through **4 Phases**:
-- **Phase 1: MVP (Current):** Anyone can contribute in *any stack*. If it's good, we merge it!
-- **Phase 2 & 3: Feature & Modularization:** Implementing features module by module and refining the architecture.
-- **Phase 4: Scalability:** Building a fully scalable, cloud-native solution for high traffic.
+backend
+  src/config      Environment and database config
+  src/controllers HTTP request/response orchestration
+  src/middleware  Validation, upload, async, and error middleware
+  src/models      Mongoose models
+  src/routes      Express routes
+  src/services    Business logic and database queries
+  src/utils       API utility helpers
+  src/seed        Sample seed data
+```
 
-## 🤝 How to Contribute
+Detailed architecture docs: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
-This is a collective effort, and everyone in the WeCode community shares the benefits of what we build! Whether you're a beginner or a pro, we would love your help. 
-Please check out our full [Contribution Guidelines](CONTRIBUTING.md) to learn how to:
-- Fork and clone the repository.
-- Create your feature branch (`feat/<branch-name>`).
-- Submit a Pull Request.
+Code audit: [docs/CODE_AUDIT.md](docs/CODE_AUDIT.md)
 
-### 📝 Pull Request Format
-To maintain a high standard of code, all Pull Requests must use our [standard template](.github/PULL_REQUEST_TEMPLATE.md). When you open a PR, you will be prompted to:
-1. **Select the Phase Category** (e.g., Phase 1 MVP).
-2. **Document your Tech Stack** (Frontend, Backend, Database).
-3. **Complete the Review Checklist** (Self-review, community standards).
-4. **Sign the AI Disclosure** (Confirming you have reviewed any AI-generated code).
-5. **Attach Screenshots** (If your PR includes UI changes).
+## Installation
 
-**BookMyVenue belongs to all of us. Join WeCode today and let's build something amazing together!**
+```bash
+cd backend
+npm install
+```
+
+```bash
+cd frontend/website
+npm install
+```
+
+## Environment Variables
+
+Backend, create `backend/.env`:
+
+```env
+PORT=5000
+NODE_ENV=development
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster-url>/bookmyvenue?retryWrites=true&w=majority
+CLIENT_URL=http://localhost:3000
+LOW_STOCK_THRESHOLD=10
+```
+
+Frontend, create `frontend/website/.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000
+```
+
+## MongoDB Setup
+
+1. Create a MongoDB Atlas cluster.
+2. Create a database user.
+3. Allow your IP address in Atlas network access.
+4. Add your Atlas connection string to `backend/.env`.
+5. Seed sample data:
+
+```bash
+cd backend
+npm run seed
+```
+
+## Start Backend
+
+```bash
+cd backend
+npm run dev
+```
+
+API base URL:
+
+```text
+http://localhost:5000
+```
+
+## Start Frontend
+
+```bash
+cd frontend/website
+npm run dev
+```
+
+App URL:
+
+```text
+http://localhost:3000
+```
+
+## API Documentation
+
+Categories:
+
+```http
+GET    /api/categories
+GET    /api/categories/:id
+POST   /api/categories
+PUT    /api/categories/:id
+DELETE /api/categories/:id
+```
+
+Products / Venues:
+
+```http
+GET    /api/products
+GET    /api/products/:id
+POST   /api/products
+PUT    /api/products/:id
+DELETE /api/products/:id
+PUT    /api/products/:id/stock
+GET    /api/products/inventory/dashboard
+POST   /api/products/upload
+```
+
+Product query parameters:
+
+```text
+search
+category
+minPrice
+maxPrice
+sort
+page
+limit
+```
+
+Example:
+
+```http
+GET /api/products?search=hall&category=Wedding&page=1&limit=10&sort=price:asc
+```
+
+Stock examples:
+
+```json
+{ "stock": 100 }
+```
+
+```json
+{ "action": "increase", "quantity": 5 }
+```
+
+```json
+{ "action": "reduce", "quantity": 2 }
+```
+
+## Available Frontend Routes
+
+```text
+/              Home
+/venues        Venue listing
+/venues/[id]   Venue details
+/about         About page
+/contact       Contact page
+/privacy       Privacy page
+/terms         Terms page
+```
+
+## Screenshots
+
+Add screenshots here before deployment:
+
+```text
+docs/screenshots/home.png
+docs/screenshots/venues.png
+docs/screenshots/details.png
+```
+
+## Deployment Guide
+
+Backend:
+
+1. Deploy `backend` to Render, Railway, Fly.io, or similar.
+2. Set production environment variables.
+3. Ensure `/uploads` persistence is configured or replace local storage with cloud storage.
+4. Set `CLIENT_URL` to your deployed frontend URL.
+
+Frontend:
+
+1. Deploy `frontend/website` to Vercel or another Next.js host.
+2. Set `NEXT_PUBLIC_API_URL` to the deployed backend API URL.
+3. Run `npm run build` before release.
+
+## Performance Notes
+
+- Venue cards use `next/image`.
+- Venue listing uses a dynamic import boundary.
+- API calls are centralized through Axios interceptors.
+- Listing pages include loading skeletons, empty states, and error states.
+- Reusable hooks reduce duplicated request logic.
+
+## Verification
+
+```bash
+cd backend
+Get-ChildItem -Recurse src -Filter *.js | ForEach-Object { node --check $_.FullName }
+```
+
+```bash
+cd frontend/website
+npm run lint
+npm run build
+```
+
+## Future Improvements
+
+- Add authentication and role-based venue management.
+- Move uploads from local disk to S3 or Cloudinary.
+- Add real booking and payment workflows.
+- Add admin dashboard charts for inventory and bookings.
+- Add automated API and component tests.

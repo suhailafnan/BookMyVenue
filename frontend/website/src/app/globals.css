@@ -1,1 +1,80 @@
 @import "tailwindcss";
+
+:root {
+  --background: #F7F3EE;
+  --surface: #FFFFFF;
+  --card: #FDFAF6;
+
+  --rust: #C8481A;
+  --amber: #B8691A;
+  --gold: #A07020;
+
+  --text: #1E120A;
+  --text-sub: #5A3E28;
+
+  --navy: #1C2860;
+  --slate: #3A5088;
+  --ochre: #8A5C10;
+  --mocha: #7A6050;
+  --taupe: #B09878;
+  --driftwood: #C8B49A;
+
+  --border: rgba(180,140,90,0.18);
+  --border-hover: rgba(180,120,60,0.38);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-linen: #F7F3EE;
+  --color-surface: var(--surface);
+  --color-pure-white: #FFFFFF;
+  --color-card: var(--card);
+  --color-parchment: #FDFAF6;
+
+  --color-rust: var(--rust);
+  --color-brick: #C8481A;
+  --color-amber: var(--amber);
+  --color-gold: var(--gold);
+  --color-antique: #A07020;
+  --color-ochre: var(--ochre);
+
+  --color-text: var(--text);
+  --color-espresso: #1E120A;
+  --color-text-sub: var(--text-sub);
+  --color-walnut: #5A3E28;
+  --color-mocha: var(--mocha);
+  --color-taupe: var(--taupe);
+  --color-driftwood: var(--driftwood);
+
+  --color-navy: var(--navy);
+  --color-slate: var(--slate);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: #F7F3EE;
+  color: #120A06;
+  font-family: Arial, Helvetica, sans-serif;
+}
+@keyframes scrollReviews {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scrollReviews 15s linear infinite;
+}
