@@ -1,4 +1,10 @@
 export default function VenueGallery() {
+  const images = [
+    "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800",
+    "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800",
+    "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800",
+  ];
+
   return (
     <section className="mb-10">
 
@@ -7,54 +13,14 @@ export default function VenueGallery() {
       </h2>
 
       <div className="grid md:grid-cols-3 gap-4">
-
-        <img
-          src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800"
-          alt="Wedding Hall"
-          className="
-          w-full
-          h-64
-          object-cover
-          rounded-2xl
-          shadow-lg
-          hover:scale-105
-          transition
-          duration-300
-          "
-        />
-
-        <img
-          src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800"
-          alt="Event Hall"
-          className="
-          w-full
-          h-64
-          object-cover
-          rounded-2xl
-          shadow-lg
-          hover:scale-105
-          transition
-          duration-300
-          "
-        />
-
-        <img
-          src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=800"
-          alt="Conference Hall"
-          className="
-          w-full
-          h-64
-          object-cover
-          rounded-2xl
-          shadow-lg
-          hover:scale-105
-          transition
-          duration-300
-          "
-        />
-
+        {images.map((image) => (
+          <div
+            key={image}
+            className="h-64 rounded-2xl bg-cover bg-center shadow-lg transition duration-300 hover:scale-105"
+            style={{ backgroundImage: `url('${image}')` }}
+          />
+        ))}
       </div>
-
     </section>
   );
 }

@@ -1,17 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function WelcomeTag() {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const seen = localStorage.getItem("welcomeTagSeen");
-
-    if (!seen) {
-      setShow(true);
-    }
-  }, []);
+  const [show, setShow] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      localStorage.getItem("welcomeTagSeen") !== "true"
+  );
 
   const closeTag = () => {
     localStorage.setItem("welcomeTagSeen", "true");

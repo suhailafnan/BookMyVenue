@@ -1,214 +1,61 @@
-// Import Product Model
-// This gives access to products collection in MongoDB
-const Product = require("../models/Product");
+const asyncHandler = require("../middleware/asyncHandler");
+const productService = require("../services/productService");
 
-// =====================================
-// GET ALL PRODUCTS + SEARCH + FILTER
-// URL: GET /api/products
-// URL: GET /api/products?keyword=hall
-// URL: GET /api/products?category=id
-// URL: GET /api/products?minPrice=1000
-// URL: GET /api/products?maxPrice=5000
-// =====================================
-const getProducts = async (req, res) => {
-  try {
+const getProducts = asyncHandler(async (req, res) => {
+  const result = await productService.getProducts(req.query);
 
-    const keyword = req.query.keyword;
-    const category = req.query.category;
-    const minPrice = req.query.minPrice;
-    const maxPrice = req.query.maxPrice;
+  res.success({
+    data: result.products,
+    meta: {
+      pagination: result.pagination,
+      inventory: result.inventory,
+    },
+  });
+});
 
-    let searchFilter = {};
+const createProduct = asyncHandler(async (req, res) => {
+  const product = await productService.createProduct(req.body, req.file);
+  res.created({ data: product, message: "Product created successfully" });
+});
 
-    // Search by product name
-    if (keyword) {
-      searchFilter.name = {
-        $regex: keyword,
-        $options: "i",
-      };
-    }
+const getProductById = asyncHandler(async (req, res) => {
+  const product = await productService.getProductById(req.params.id);
+  res.success({ data: product });
+});
 
-    // Filter by category
-    if (category) {
-      searchFilter.category = category;
-    }
+const updateProduct = asyncHandler(async (req, res) => {
+  const product = await productService.updateProduct(
+    req.params.id,
+    req.body,
+    req.file
+  );
 
-    // Filter by minimum price
-    if (minPrice) {
-      searchFilter.price = {
-        ...searchFilter.price,
-        $gte: Number(minPrice),
-      };
-    }
+  res.success({ data: product, message: "Product updated successfully" });
+});
 
-    // Filter by maximum price
-    if (maxPrice) {
-      searchFilter.price = {
-        ...searchFilter.price,
-        $lte: Number(maxPrice),
-      };
-    }
+const deleteProduct = asyncHandler(async (req, res) => {
+  await productService.deleteProduct(req.params.id);
+  res.success({ message: "Product deleted successfully" });
+});
 
-    const products = await Product.find(searchFilter)
-      .populate("category");
+const updateStock = asyncHandler(async (req, res) => {
+  const { product, warning } = await productService.updateStock(
+    req.params.id,
+    req.body
+  );
 
-    res.status(200).json(products);
+  res.success({
+    data: product,
+    message: "Stock updated successfully",
+    meta: { warning },
+  });
+});
 
-  } catch (error) {
+const getInventoryDashboard = asyncHandler(async (req, res) => {
+  const dashboard = await productService.getInventoryDashboard();
+  res.success({ data: dashboard });
+});
 
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-
-// =====================================
-// CREATE PRODUCT
-// URL: POST /api/products
-// =====================================
-const createProduct = async (req, res) => {
-  try {
-
-    // Create new product using request body
-    const product = await Product.create(req.body);
-
-    // Return newly created product
-    res.status(201).json(product);
-
-  } catch (error) {
-
-    // If error occurs, send error message
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-
-// =====================================
-// GET PRODUCT BY ID
-// URL: GET /api/products/:id
-// =====================================
-const getProductById = async (req, res) => {
-  try {
-
-    // Get ID from URL
-    const productId = req.params.id;
-
-    // Find product and populate category
-    const product = await Product.findById(productId)
-      .populate("category");
-
-    if (!product) {
-      return res.status(404).json({
-        message: "Product not found",
-      });
-    }
-
-    res.status(200).json(product);
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-
-// =====================================
-// UPDATE PRODUCT
-// URL: PUT /api/products/:id
-// =====================================
-const updateProduct = async (req, res) => {
-  try {
-
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-
-    if (!product) {
-      return res.status(404).json({
-        message: "Product not found",
-      });
-    }
-
-    res.json(product);
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-
-// =====================================
-// DELETE PRODUCT
-// URL: DELETE /api/products/:id
-// =====================================
-const deleteProduct = async (req, res) => {
-  try {
-
-    const product = await Product.findByIdAndDelete(req.params.id);
-
-    if (!product) {
-      return res.status(404).json({
-        message: "Product not found",
-      });
-    }
-
-    res.json({
-      message: "Product deleted successfully",
-    });
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-// =====================================
-// UPDATE STOCK
-// URL: PUT /api/products/:id/stock
-// =====================================
-const updateStock = async (req, res) => {
-  try {
-
-    const { stock } = req.body;
-
-    const product = await Product.findById(req.params.id);
-
-    if (!product) {
-      return res.status(404).json({
-        message: "Product not found",
-      });
-    }
-
-    product.stock = stock;
-
-    await product.save();
-
-    res.status(200).json({
-      message: "Stock updated successfully",
-      product,
-    });
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-// Export functions
 module.exports = {
   getProducts,
   createProduct,
@@ -216,4 +63,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   updateStock,
+  getInventoryDashboard,
 };

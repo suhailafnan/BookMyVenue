@@ -59,9 +59,7 @@ export default function Testimonials() {
                 {"★".repeat(review.rating)}
               </p>
 
-              <p className="text-[#7A6050] mb-4">
-                "{review.review}"
-              </p>
+              <p className="text-[#7A6050] mb-4">{review.review}</p>
 
               <h3 className="font-semibold text-[#1E120A]">
                 {review.name}

@@ -6,6 +6,12 @@ const router = express.Router();
 
 // Import upload middleware
 const upload = require("../middleware/uploadMiddleware");
+const {
+  requireFields,
+  validateObjectId,
+  validateProductPayload,
+  validateStockPayload,
+} = require("../middleware/validateMiddleware");
 
 // Import controller functions
 const {
@@ -15,6 +21,7 @@ const {
   updateProduct,
   deleteProduct,
   updateStock,
+  getInventoryDashboard,
 } = require("../controllers/productController");
 
 
@@ -29,7 +36,15 @@ router.get("/", getProducts);
 // CREATE PRODUCT
 // URL: POST /api/products
 // =====================================
-router.post("/", createProduct);
+router.post(
+  "/",
+  upload.single("image"),
+  requireFields(["name", "description", "price", "category"]),
+  validateProductPayload,
+  createProduct
+);
+
+router.get("/inventory/dashboard", getInventoryDashboard);
 
 
 // =====================================
@@ -40,25 +55,22 @@ router.post(
   "/upload",
   upload.single("image"),
   (req, res) => {
-
-    console.log("HEADERS =", req.headers);
-    console.log("FILE =", req.file);
-    console.log("BODY =", req.body);
-
     if (!req.file) {
       return res.status(400).json({
+        success: false,
         message: "No file uploaded",
       });
     }
 
-    res.status(200).json({
+    res.success({
       message: "Image uploaded successfully",
-      filename: req.file.filename,
-      originalname: req.file.originalname,
-      path: req.file.path,
-      size: req.file.size,
+      data: {
+        filename: req.file.filename,
+        originalname: req.file.originalname,
+        path: req.file.path,
+        size: req.file.size,
+      },
     });
-
   }
 );
 
@@ -67,28 +79,34 @@ router.post(
 // GET PRODUCT BY ID
 // URL: GET /api/products/:id
 // =====================================
-router.get("/:id", getProductById);
+router.get("/:id", validateObjectId(), getProductById);
 
 
 // =====================================
 // UPDATE PRODUCT
 // URL: PUT /api/products/:id
 // =====================================
-router.put("/:id", updateProduct);
+router.put(
+  "/:id",
+  validateObjectId(),
+  upload.single("image"),
+  validateProductPayload,
+  updateProduct
+);
 
 
 // =====================================
 // UPDATE STOCK
 // URL: PUT /api/products/:id/stock
 // =====================================
-router.put("/:id/stock", updateStock);
+router.put("/:id/stock", validateObjectId(), validateStockPayload, updateStock);
 
 
 // =====================================
 // DELETE PRODUCT
 // URL: DELETE /api/products/:id
 // =====================================
-router.delete("/:id", deleteProduct);
+router.delete("/:id", validateObjectId(), deleteProduct);
 
 
 // Export router

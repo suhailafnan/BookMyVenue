@@ -1,53 +1,59 @@
 export default function Footer() {
+  const links = [
+    ["Home", "/"],
+    ["Venues", "/venues"],
+    ["About", "/about"],
+    ["Contact", "/contact"],
+  ];
+
   return (
-    <footer className="bg-[#120A06] border-t border-[#4A3425] mt-16">
-
-      <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-8">
-
+    <footer className="border-t border-[#C8B49A]/30 bg-[#1E120A]">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.2fr_0.8fr_1fr] lg:px-8">
         <div>
-          <h2 className="text-xl font-bold text-[#F5E6D3] mb-4">
+          <h2 className="mb-4 text-xl font-bold text-[#F7F3EE]">
             BookMyVenue
           </h2>
 
-          <p className="text-[#A87C5C]">
+          <p className="leading-7 text-[#C8B49A]">
             Find and book premium venues for weddings,
             conferences and special events.
           </p>
         </div>
 
         <div>
-          <h3 className="text-[#F5E6D3] font-semibold mb-4">
+          <h3 className="mb-4 font-semibold text-[#F7F3EE]">
             Quick Links
           </h3>
 
-          <ul className="space-y-2 text-[#A87C5C]">
-            <li>Home</li>
-            <li>Venues</li>
-            <li>About</li>
-            <li>Contact</li>
+          <ul className="space-y-2 text-[#C8B49A]">
+            {links.map(([label, href]) => (
+              <li key={href}>
+                <a href={href} className="transition hover:text-white">
+                  {label}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
 
         <div>
-          <h3 className="text-[#F5E6D3] font-semibold mb-4">
+          <h3 className="mb-4 font-semibold text-[#F7F3EE]">
             Contact
           </h3>
 
-          <p className="text-[#A87C5C]">
+          <p className="text-[#C8B49A]">
             support@bookmyvenue.com
           </p>
 
-          <p className="text-[#A87C5C]">
+          <p className="text-[#C8B49A]">
             +91 98765 43210
           </p>
         </div>
-
       </div>
 
-      <div className="border-t border-[#4A3425] py-4 text-center text-[#A87C5C]">
+      <div className="border-t border-[#C8B49A]/20 py-4 text-center text-[#C8B49A]">
         © 2026 BookMyVenue. All rights reserved.
       </div>
-
     </footer>
   );
 }

@@ -4,12 +4,11 @@ const express = require("express");
 // Import CORS package
 const cors = require("cors");
 
-// Import dotenv for .env variables
-const dotenv = require("dotenv");
-
 // Import path module
 // Used for folder/file paths
 const path = require("path");
+
+const env = require("./src/config/env");
 
 // Import MongoDB connection function
 const connectDB = require("./src/config/db");
@@ -19,9 +18,8 @@ const productRoutes = require("./src/routes/productRoutes");
 
 // Import Category Routes
 const categoryRoutes = require("./src/routes/categoryRoutes");
-
-// Load .env file
-dotenv.config();
+const { errorHandler, notFound } = require("./src/middleware/errorMiddleware");
+const responseFormatter = require("./src/utils/responseFormatter");
 
 // Connect MongoDB Atlas
 connectDB();
@@ -35,10 +33,15 @@ const app = express();
 // =====================================
 
 // Allow frontend requests
-app.use(cors());
+app.use(
+  cors({
+    origin: env.clientUrl,
+  })
+);
 
 // Accept JSON data
 app.use(express.json());
+app.use(responseFormatter);
 
 
 // =====================================
@@ -75,16 +78,21 @@ app.use("/api/categories", categoryRoutes);
 // =====================================
 
 app.get("/", (req, res) => {
-  res.send("BookMyVenue Backend Running");
+  res.json({
+    name: "BookMyVenue API",
+    status: "running",
+    endpoints: ["/api/categories", "/api/products", "/uploads"],
+  });
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 
 // =====================================
 // SERVER
 // =====================================
 
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(env.port, () => {
+  console.log(`Server running on port ${env.port}`);
 });

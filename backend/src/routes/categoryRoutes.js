@@ -6,6 +6,12 @@ const router = express.Router();
 
 // Import Category Controller Functions
 const {
+  requireFields,
+  validateObjectId,
+} = require("../middleware/validateMiddleware");
+
+// Import Category Controller Functions
+const {
   getCategories,
   createCategory,
   getCategoryById,
@@ -25,28 +31,28 @@ router.get("/", getCategories);
 // CREATE CATEGORY
 // URL: POST /api/categories
 // =====================================
-router.post("/", createCategory);
+router.post("/", requireFields(["name"]), createCategory);
 
 
 // =====================================
 // GET CATEGORY BY ID
 // URL: GET /api/categories/:id
 // =====================================
-router.get("/:id", getCategoryById);
+router.get("/:id", validateObjectId(), getCategoryById);
 
 
 // =====================================
 // UPDATE CATEGORY
 // URL: PUT /api/categories/:id
 // =====================================
-router.put("/:id", updateCategory);
+router.put("/:id", validateObjectId(), updateCategory);
 
 
 // =====================================
 // DELETE CATEGORY
 // URL: DELETE /api/categories/:id
 // =====================================
-router.delete("/:id", deleteCategory);
+router.delete("/:id", validateObjectId(), deleteCategory);
 
 
 // Export Router
