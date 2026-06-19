@@ -1,65 +1,154 @@
+import Link from "next/link";
 import Image from "next/image";
+import VenueCard from "@/features/venues/components/VenueCard";
+import HomeSearch from "@/features/venues/components/HomeSearch";
+import { fallbackCategories, venues } from "@/features/venues/data/venues";
+import { getCategories, getVenues } from "@/services/api";
 
-export default function Home() {
+export default async function Home() {
+  const { homeVenues, categories } = await loadHomeData();
+  const featuredVenues = homeVenues.slice(0, 3);
+  const popularVenues = homeVenues.slice(3, 6);
+  const cityOptions = Array.from(
+    new Set(homeVenues.map((venue) => venue.metadata.location).filter(Boolean))
+  );
+  const categoryOptions = categories.map((category) => category.name);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+    <main>
+      <section className="relative min-h-[calc(100vh-72px)] overflow-hidden bg-[#1E120A]">
         <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
+          src="/images/hero.jpg"
+          alt="Premium venue interior"
+          fill
           priority
+          sizes="100vw"
+          className="object-cover opacity-70"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+        <div className="absolute inset-0 bg-[#1E120A]/60" />
+        <div className="relative mx-auto flex min-h-[calc(100vh-72px)] max-w-7xl flex-col justify-center px-4 py-16 text-white sm:px-6 lg:px-8">
+          <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#C8B49A]">
+            Premium venue booking
           </p>
+          <h1 className="mt-5 max-w-4xl text-4xl font-bold leading-tight sm:text-5xl lg:text-7xl">
+            BookMyVenue
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-7 text-[#F7F3EE] sm:text-lg sm:leading-8">
+            Discover wedding halls, banquet homes, boardrooms, and garden
+            venues with transparent pricing, availability, and venue details.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/venues"
+              className="rounded-md bg-[#C8481A] px-6 py-3 text-center font-semibold text-white transition hover:bg-[#B8691A]"
+            >
+              Explore Venues
+            </Link>
+            <Link
+              href="/contact"
+              className="rounded-md border border-white/70 px-6 py-3 text-center font-semibold text-white transition hover:bg-white hover:text-[#1E120A]"
+            >
+              Talk to Us
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className="relative z-10 mx-auto -mt-10 max-w-6xl px-4 sm:px-6 lg:px-8">
+        <HomeSearch categories={categoryOptions} cities={cityOptions} />
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <SectionHeading label="Featured" title="Handpicked Venues" />
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          {featuredVenues.map((venue) => (
+            <VenueCard key={venue._id} venue={venue} />
+          ))}
         </div>
-      </main>
+      </section>
+
+      <section className="bg-[#FDFAF6] py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading label="Popular" title="Most Booked Spaces" />
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            {popularVenues.map((venue) => (
+              <VenueCard key={venue._id} venue={venue} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <SectionHeading label="Categories" title="Plan by Occasion" />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {categories.map((category) => (
+            <Link
+              key={category._id}
+              href={`/venues?category=${category.name}`}
+              className="rounded-lg border border-[#C8B49A] bg-white p-5 transition hover:-translate-y-1 hover:shadow-lg"
+            >
+              <h3 className="text-lg font-bold text-[#1E120A]">
+                {category.name}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-[#7A6050]">
+                {category.description}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-[#1C2860] py-16 text-white lg:py-20">
+        <div className="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
+          {[
+            "The shortlist and pricing helped us close a wedding venue in one afternoon.",
+            "Clean inventory, clear capacity numbers, and fast vendor responses.",
+            "The corporate venue filters saved our event team hours of calls.",
+          ].map((quote, index) => (
+            <blockquote
+              key={quote}
+              className="rounded-lg border border-white/15 bg-white/10 p-6"
+            >
+              <p className="text-lg leading-8">{quote}</p>
+              <footer className="mt-5 text-sm text-[#C8B49A]">
+                Verified host {index + 1}
+              </footer>
+            </blockquote>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+async function loadHomeData() {
+  try {
+    const [venueResponse, categoryResponse] = await Promise.all([
+      getVenues({ page: 1, limit: 6, sort: "createdAt:desc" }),
+      getCategories(),
+    ]);
+
+    return {
+      homeVenues: venueResponse.data.length ? venueResponse.data : venues,
+      categories: categoryResponse.length ? categoryResponse : fallbackCategories,
+    };
+  } catch {
+    return {
+      homeVenues: venues,
+      categories: fallbackCategories,
+    };
+  }
+}
+
+function SectionHeading({ label, title }: { label: string; title: string }) {
+  return (
+    <div className="max-w-2xl">
+      <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#A07020]">
+        {label}
+      </p>
+      <h2 className="mt-3 text-3xl font-bold text-[#1E120A] md:text-4xl">
+        {title}
+      </h2>
     </div>
   );
 }

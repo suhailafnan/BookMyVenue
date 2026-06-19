@@ -1,0 +1,90 @@
+// Import Express
+const express = require("express");
+
+// Create Router
+const router = express.Router();
+
+// Import Upload Middleware
+const upload = require("../middleware/uploadMiddleware");
+
+// Import Controllers
+const {
+  getProducts,
+  createProduct,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+  updateStock,
+} = require("../controllers/productController");
+
+
+// =====================================
+// GET ALL PRODUCTS
+// URL: GET /api/products
+// =====================================
+router.get("/", getProducts);
+
+
+// =====================================
+// CREATE PRODUCT
+// URL: POST /api/products
+// =====================================
+router.post("/", createProduct);
+
+
+// =====================================
+// GET PRODUCT BY ID
+// URL: GET /api/products/:id
+// =====================================
+router.get("/:id", getProductById);
+
+
+// =====================================
+// UPDATE PRODUCT
+// URL: PUT /api/products/:id
+// =====================================
+router.put("/:id", updateProduct);
+
+
+// =====================================
+// DELETE PRODUCT
+// URL: DELETE /api/products/:id
+// =====================================
+router.delete("/:id", deleteProduct);
+
+
+// =====================================
+// UPDATE PRODUCT STOCK
+// URL: PUT /api/products/:id/stock
+// =====================================
+router.put("/:id/stock", updateStock);
+
+
+// =====================================
+// UPLOAD PRODUCT IMAGE
+// URL: POST /api/products/upload
+// =====================================
+router.post(
+  "/upload",
+  upload.single("image"),
+  (req, res) => {
+
+    if (!req.file) {
+      return res.status(400).json({
+        message: "No file uploaded",
+      });
+    }
+
+    res.status(200).json({
+      message: "Image uploaded successfully",
+      filename: req.file.filename,
+      originalname: req.file.originalname,
+      path: req.file.path,
+      size: req.file.size,
+    });
+
+  }
+);
+
+// Export Router
+module.exports = router;
